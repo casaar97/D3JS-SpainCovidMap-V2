@@ -53,7 +53,7 @@ Once we have everything we needed installed, let´s create the required files in
 - src/index.html: HTML code of the project.
 - src/map.css: CSS code of the project.
 
-###  src/communities.ts:
+### src/communities.ts:
 
 ```typescript
 export const latLongCommunities = [
@@ -145,7 +145,7 @@ export const latLongCommunities = [
 ];
 ```
 
-###  src/stats.ts:
+### src/stats.ts:
 
 ```typescript
 export interface ResultEntry {
@@ -221,7 +221,7 @@ export const initialStats: ResultEntry[] = [
   {
     name: "Navarra",
     value: 20,
-  }
+  },
 ];
 
 /*
@@ -299,7 +299,7 @@ export const todayStats: ResultEntry[] = [
   {
     name: "Navarra",
     value: 56959,
-  }
+  },
 ];
 ```
 
@@ -324,7 +324,6 @@ We will create two classes:
   fill-opacity: 0.7;
 }
 ```
-
 
 We will use Spain topojson info: https://github.com/deldersveld/topojson/blob/master/countries/spain/spain-comunidad-with-canary-islands.json
 
@@ -391,6 +390,7 @@ const calculateMaxAffected = (dataset: ResultEntry[]) => {
   );
 };
 ```
+
 ### Create a radius scale for the radius of each community circunference depending on the number of cases of the most affected community:
 
 ```typescript
@@ -420,7 +420,6 @@ const calculateRadiusBasedOnAffectedCases = (
 
 ```typescript
 const getScaledColor = (dataset: ResultEntry[]) => {
-  
   const maxValue = calculateMaxAffected(dataset);
 
   const color = d3
@@ -453,11 +452,10 @@ const assignColorToCommunity = (comunidad: string, dataset: ResultEntry[]) => {
 
 ### Update chart when buttons are clicked
 
-We now that we have to pass d.properties.NAME_1 as a parameter for assignColorToCommunity function because when we inspect _spain.json_, we can see that the property NAME_1 refers to the community name.
+We now that we have to pass d.properties.NAME_1 as a parameter for assignColorToCommunity function because when we inspect spain.json, we can see that the property NAME_1 refers to the community name.
 
 ```typescript
 const updateChart = (dataset: ResultEntry[]) => {
-  
   svg.selectAll("path").remove();
 
   svg
