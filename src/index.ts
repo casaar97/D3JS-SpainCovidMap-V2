@@ -14,12 +14,45 @@ const aProjection = d3Composite
 const geoPath = d3.geoPath().projection(aProjection);
 const geojson = topojson.feature(spainjson, spainjson.objects.ESP_adm1);
 
-/*
-const color = d3
-  .scaleThreshold<number, string>()
-  .domain([0, 1000, 10000, 50000, 100000, 500000])
-  .range(["#e6f4f1", "#9bceec", "#6fa2bf", "#447994", "#15516b", "#002d44"]);
-*/
+const svg = d3
+  .select("body")
+  .append("svg")
+  .attr("width", 1024)
+  .attr("height", 800)
+  .attr("style", "background-color: #FBFAF0");
+
+svg
+  .selectAll("path")
+  .data(geojson["features"])
+  .enter()
+  .append("path")
+  .attr("class", "country")
+  // data loaded from json file
+  .attr("d", geoPath as any);
+
+const calculateMaxAffected = (dataset: ResultEntry[]) => {
+  return dataset.reduce(
+    (max, item) => (item.value > max ? item.value : max),
+    0
+  );
+};
+
+const calculateAffectedRadiusScale = (maxAffected: number) => {
+  return d3.scaleLinear().domain([0, maxAffected]).range([0, 50]);
+};
+
+const calculateRadiusBasedOnAffectedCases = (
+  comunidad: string,
+  dataset: ResultEntry[]
+) => {
+  const maxAffected = calculateMaxAffected(dataset);
+
+  const affectedRadiusScale = calculateAffectedRadiusScale(maxAffected);
+
+  const entry = dataset.find((item) => item.name === comunidad);
+
+  return entry ? affectedRadiusScale(entry.value) : 0;
+};
 
 const getScaledColor = (dataset: ResultEntry[]) => {
   const maxValue = calculateMaxAffected(dataset);
@@ -47,21 +80,17 @@ const assignColorToCommunity = (comunidad: string, dataset: ResultEntry[]) => {
   return entry ? color(entry.value) : color(0);
 };
 
-const svg = d3
-  .select("body")
-  .append("svg")
-  .attr("width", 1024)
-  .attr("height", 800)
-  .attr("style", "background-color: #FBFAF0");
+document
+  .getElementById("initial")
+  .addEventListener("click", function handleInitialStats() {
+    updateChart(initialStats);
+  });
 
-svg
-  .selectAll("path")
-  .data(geojson["features"])
-  .enter()
-  .append("path")
-  .attr("class", "country")
-  // data loaded from json file
-  .attr("d", geoPath as any);
+document
+  .getElementById("today")
+  .addEventListener("click", function handleTodayStats() {
+    updateChart(todayStats);
+  });
 
 const updateChart = (dataset: ResultEntry[]) => {
   svg.selectAll("path").remove();
@@ -78,14 +107,6 @@ const updateChart = (dataset: ResultEntry[]) => {
       return assignColorToCommunity(d.properties.NAME_1, dataset);
     });
 
-  /*
-  svg
-  .selectAll("path")
-  .data(latLongCommunities)
-  .enter()
-  .append("path")
-  .style("fill", (d) => assignColorToCommunity(d.name, dataset));
-  */
   svg.selectAll("circle").remove();
 
   svg
@@ -97,40 +118,4 @@ const updateChart = (dataset: ResultEntry[]) => {
     .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, dataset))
     .attr("cx", (d) => aProjection([d.long, d.lat])[0])
     .attr("cy", (d) => aProjection([d.long, d.lat])[1]);
-};
-
-document
-  .getElementById("initial")
-  .addEventListener("click", function handleInitialStats() {
-    updateChart(initialStats);
-  });
-
-document
-  .getElementById("today")
-  .addEventListener("click", function handleTodayStats() {
-    updateChart(todayStats);
-  });
-
-const calculateMaxAffected = (dataset: ResultEntry[]) => {
-  return dataset.reduce(
-    (max, item) => (item.value > max ? item.value : max),
-    0
-  );
-};
-
-const calculateAffectedRadiusScale = (maxAffected: number) => {
-  return d3.scaleLinear().domain([0, maxAffected]).range([0, 50]);
-};
-
-const calculateRadiusBasedOnAffectedCases = (
-  comunidad: string,
-  dataset: ResultEntry[]
-) => {
-  const maxAffected = calculateMaxAffected(dataset);
-
-  const affectedRadiusScale = calculateAffectedRadiusScale(maxAffected);
-
-  const entry = dataset.find((item) => item.name === comunidad);
-
-  return entry ? affectedRadiusScale(entry.value) : 0;
 };
