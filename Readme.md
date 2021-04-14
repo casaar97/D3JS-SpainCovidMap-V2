@@ -343,7 +343,7 @@ import { latLongCommunities } from "./communities";
 import { initialStats, todayStats, ResultEntry } from "./stats";
 ```
 
-- Let's build the Spain map in stenad of europe:
+- Let's build the Spain map instead of europe:
 
 _./src/index.ts_
 
@@ -452,6 +452,8 @@ const assignColorToCommunity = (comunidad: string, dataset: ResultEntry[]) => {
 ```
 
 ### Update chart when buttons are clicked
+
+We now that we have to pass d.properties.NAME_1 as a parameter for assignColorToCommunity function because when we inspect _spain.json_, we can see that the property NAME_1 refers to the community name.
 
 ```typescript
 const updateChart = (dataset: ResultEntry[]) => {
