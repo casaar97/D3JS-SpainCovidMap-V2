@@ -359,7 +359,7 @@ We will create two classes:
 ```typescript
 .country {
   stroke-width: 1;
-  stroke: #2f4858;
+  stroke: #c3d3db;
   fill: #008c86;
 }
 
