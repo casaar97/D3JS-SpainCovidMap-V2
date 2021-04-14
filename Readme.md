@@ -11,7 +11,7 @@ We have to face two challenges here:
 
 # Steps
 
-Altough the version 1.0 of the map is very similar, I will explain everything from the scratch just to make sure that you understand everything.
+Although the version 1.0 of the map is very similar, I will explain everything from the scratch just to make sure that you understand everything.
 
 The first thing you have to do is to create a project folder containing the following files and directories:
 
