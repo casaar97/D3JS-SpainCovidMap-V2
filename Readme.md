@@ -15,7 +15,22 @@ We will compare the situation of COVID cases in the different communities of Spa
 
 # Data
 
-The data has been extracted from this source: https://www.eldiario.es/sociedad/mapa-datos-coronavirus-espana-comunidades-autonomas-abril-19_1_1039633.html
+The data of the COVID cases has been extracted from this source: https://www.eldiario.es/sociedad/mapa-datos-coronavirus-espana-comunidades-autonomas-abril-19_1_1039633.html
+
+The data of the Spain communities has been extracted from this source: https://github.com/deldersveld/topojson/blob/master/countries/spain/spain-comunidad-with-canary-islands.json
+
+It is a json file containing the topology of each community.
+
+In order to make this project work correctly, the name of some communities has been changed. The reason is that it appeared in a different way for some communities, which caused a mismatch when looking for them.
+
+```diff
+"Comunidad de Madrid" has been changed to "Madrid""
+"Castilla-La Mancha" has been changed to "Castilla La Mancha"
+"Comunidad Foral de Navarra" has been changed to "Navarra"
+"Comunidad Valenciana" has been changed to "Valencia"
+"Principado de Asturias" has been changed to "Asturias"
+"Región de Murcia" has been changed to "Murcia"
+```
 
 # Try the project
 
