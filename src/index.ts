@@ -21,15 +21,6 @@ const svg = d3
   .attr("height", 800)
   .attr("style", "background-color: #FBFAF0");
 
-svg
-  .selectAll("path")
-  .data(geojson["features"])
-  .enter()
-  .append("path")
-  .attr("class", "country")
-  // data loaded from json file
-  .attr("d", geoPath as any);
-
 const calculateMaxAffected = (dataset: ResultEntry[]) => {
   return dataset.reduce(
     (max, item) => (item.value > max ? item.value : max),

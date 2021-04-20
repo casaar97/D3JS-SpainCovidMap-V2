@@ -446,15 +446,6 @@ const svg = d3
   .attr("width", 1024)
   .attr("height", 800)
   .attr("style", "background-color: #FBFAF0");
-
-svg
-  .selectAll("path")
-  .data(geojson["features"])
-  .enter()
-  .append("path")
-  .attr("class", "country")
-  // data loaded from json file
-  .attr("d", geoPath as any);
 ```
 
 At this point, the map has been created. Now we will create some functions in order to make everything work as we desire:
