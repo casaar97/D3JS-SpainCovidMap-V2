@@ -9,9 +9,11 @@ We have to face two challenges here:
 - Set a color scale for the number of cases.
 - Set a color for each community depending of it's number of cases using the color scale.
 
-# Data
+# Objective
 
 We will compare the situation of COVID cases in the different communities of Spain. In addition, we wll also show the communities in different colors. The darker the color, the greater is the number of cases. In order to do this, we will compare the total accumulated cases of each community, taking as a reference the community with most cases.
+
+# Data
 
 The data has been extracted from this source: https://www.eldiario.es/sociedad/mapa-datos-coronavirus-espana-comunidades-autonomas-abril-19_1_1039633.html
 
