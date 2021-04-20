@@ -38,7 +38,7 @@ const calculateMaxAffected = (dataset: ResultEntry[]) => {
 };
 
 const calculateAffectedRadiusScale = (maxAffected: number) => {
-  return d3.scaleLinear().domain([0, maxAffected]).range([0, 50]);
+  return d3.scaleLinear().domain([0, maxAffected]).range([0, 40]);
 };
 
 const calculateRadiusBasedOnAffectedCases = (
@@ -93,9 +93,31 @@ document
   });
 
 const updateChart = (dataset: ResultEntry[]) => {
-  svg.selectAll("path").remove();
+  svg
+    .selectAll("path")
+    .data(geojson["features"])
+    .attr("class", "country")
+    // data loaded from json file
+    .attr("d", geoPath as any)
+    .transition()
+    .duration(800)
+    .style("fill", function (d: any) {
+      return assignColorToCommunity(d.properties.NAME_1, dataset);
+    });
 
   svg
+    .selectAll("circle")
+    .data(latLongCommunities)
+    .attr("class", "affected-marker")
+    .attr("cx", (d) => aProjection([d.long, d.lat])[0])
+    .attr("cy", (d) => aProjection([d.long, d.lat])[1])
+    .transition()
+    .duration(800)
+    .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, dataset));
+    
+};
+
+svg
     .selectAll("path")
     .data(geojson["features"])
     .enter()
@@ -104,18 +126,15 @@ const updateChart = (dataset: ResultEntry[]) => {
     // data loaded from json file
     .attr("d", geoPath as any)
     .style("fill", function (d: any) {
-      return assignColorToCommunity(d.properties.NAME_1, dataset);
+      return assignColorToCommunity(d.properties.NAME_1, initialStats);
     });
 
-  svg.selectAll("circle").remove();
-
-  svg
+svg
     .selectAll("circle")
     .data(latLongCommunities)
     .enter()
     .append("circle")
     .attr("class", "affected-marker")
-    .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, dataset))
     .attr("cx", (d) => aProjection([d.long, d.lat])[0])
-    .attr("cy", (d) => aProjection([d.long, d.lat])[1]);
-};
+    .attr("cy", (d) => aProjection([d.long, d.lat])[1])
+    .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, initialStats));

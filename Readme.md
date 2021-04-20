@@ -9,6 +9,22 @@ We have to face two challenges here:
 - Set a color scale for the number of cases.
 - Set a color for each community depending of it's number of cases using the color scale.
 
+# Data
+
+We will compare the situation of COVID cases in the different communities of Spain. In addition, we wll also show the communities in different colors. The darker the color, the greater is the number of cases. In order to do this, we will compare the total accumulated cases of each community, taking as a reference the community with most cases.
+
+The data has been extracted from this source: https://www.eldiario.es/sociedad/mapa-datos-coronavirus-espana-comunidades-autonomas-abril-19_1_1039633.html
+
+# Try the project
+
+If you want to try the project, you just have to type the following into the terminal:
+
+```bash
+npm start
+```
+
+- Note that the steps below must be completed or the repository must be cloned before.
+
 # Steps
 
 Although the version 1.0 of the map is very similar, I will explain everything from the scratch just to make sure that you understand everything.
@@ -441,7 +457,7 @@ const calculateMaxAffected = (dataset: ResultEntry[]) => {
 
 ```typescript
 const calculateAffectedRadiusScale = (maxAffected: number) => {
-  return d3.scaleLinear().domain([0, maxAffected]).range([0, 50]);
+  return d3.scaleLinear().domain([0, maxAffected]).range([0, 40]);
 };
 ```
 
@@ -502,31 +518,28 @@ We now that we have to pass d.properties.NAME_1 as a parameter for assignColorTo
 
 ```typescript
 const updateChart = (dataset: ResultEntry[]) => {
-  svg.selectAll("path").remove();
-
   svg
     .selectAll("path")
     .data(geojson["features"])
-    .enter()
-    .append("path")
     .attr("class", "country")
     // data loaded from json file
     .attr("d", geoPath as any)
+    .transition()
+    .duration(800)
     .style("fill", function (d: any) {
       return assignColorToCommunity(d.properties.NAME_1, dataset);
     });
 
-  svg.selectAll("circle").remove();
-
   svg
     .selectAll("circle")
     .data(latLongCommunities)
-    .enter()
-    .append("circle")
     .attr("class", "affected-marker")
-    .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, dataset))
     .attr("cx", (d) => aProjection([d.long, d.lat])[0])
-    .attr("cy", (d) => aProjection([d.long, d.lat])[1]);
+    .attr("cy", (d) => aProjection([d.long, d.lat])[1])
+    .transition()
+    .duration(800)
+    .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, dataset));
+    
 };
 ```
 
@@ -545,3 +558,29 @@ document
     updateChart(finalStats);
   });
 ```
+
+### Add initial stats to the map by default
+
+```typescript
+svg
+    .selectAll("path")
+    .data(geojson["features"])
+    .enter()
+    .append("path")
+    .attr("class", "country")
+    // data loaded from json file
+    .attr("d", geoPath as any)
+    .style("fill", function (d: any) {
+      return assignColorToCommunity(d.properties.NAME_1, initialStats);
+    });
+
+svg
+    .selectAll("circle")
+    .data(latLongCommunities)
+    .enter()
+    .append("circle")
+    .attr("class", "affected-marker")
+    .attr("cx", (d) => aProjection([d.long, d.lat])[0])
+    .attr("cy", (d) => aProjection([d.long, d.lat])[1])
+    .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name, initialStats));
+    ```
