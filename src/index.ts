@@ -28,8 +28,9 @@ const calculateMaxAffected = (dataset: ResultEntry[]) => {
   );
 };
 
+
 const calculateAffectedRadiusScale = (maxAffected: number) => {
-  return d3.scaleLinear().domain([0, maxAffected]).range([0, 40]);
+  return d3.scaleLinear().domain([0, maxAffected]).range([0, 20]);
 };
 
 const calculateRadiusBasedOnAffectedCases = (
@@ -42,7 +43,17 @@ const calculateRadiusBasedOnAffectedCases = (
 
   const entry = dataset.find((item) => item.name === comunidad);
 
-  return entry ? affectedRadiusScale(entry.value) + 5 : 0;
+  const adder = d3
+    .scaleThreshold<number, number>()
+    .domain([
+      0,
+      1000,
+      10000,
+      100000,
+    ])
+    .range([1, 5, 10, 20]);
+
+  return entry ? affectedRadiusScale(entry.value) + adder(maxAffected) : 0;
 };
 
 const getScaledColor = (dataset: ResultEntry[]) => {
